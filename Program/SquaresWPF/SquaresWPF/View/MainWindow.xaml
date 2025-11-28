@@ -1,0 +1,96 @@
+﻿<Window x:Class="SquaresWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SquaresWPF"
+        mc:Ignorable="d"
+        Title="MainWindow" ResizeMode="NoResize" Height="1000" Width="1000">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0">
+            <MenuItem Header="Fájl">
+                <MenuItem Header="Új játék" Command="{Binding NewGameCommand}"/>
+                <Separator />
+                <MenuItem Header="Játék betöltése..." Command="{Binding LoadGameCommand}"/>
+                <MenuItem Header="Játék mentése..." Command="{Binding SaveGameCommand}"/>
+                <Separator/>
+                <MenuItem Header="Kilépés" Command="{Binding ExitCommand}"/>
+            </MenuItem>
+            <MenuItem Header="Beállítások">
+                <MenuItem Header="3x3" Command="{Binding ChangeSize}" CommandParameter="3"/>
+                <MenuItem Header="5x5" Command="{Binding ChangeSize}" CommandParameter="5"/>
+                <MenuItem Header="9x9" Command="{Binding ChangeSize}" CommandParameter="9"/>
+            </MenuItem>
+        </Menu>
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding Fields}" x:Name="playField">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="{Binding PlayFieldSize}" Rows="{Binding PlayFieldSize}"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button Command="{Binding StepCommand}" CommandParameter="{Binding XYV}" Focusable="False"  IsEnabled="{Binding Enabled}" Visibility="{Binding Visibility}" Background="{Binding Color}">
+                        
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Vertical}" Value="True">
+                                        <Setter Property="Width" Value="30"/>
+                                        <Setter Property="Height" Value="auto"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Vertical}" Value="False">
+                                        <Setter Property="Width" Value="auto"/>
+                                        <Setter Property="Height" Value="30"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Square}" Value="True">
+                                        <Setter Property="Width" Value="auto"/>
+                                        <Setter Property="Height" Value="auto"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Filler}" Value="True">
+                                        <Setter Property="Width" Value="auto"/>
+                                        <Setter Property="Height" Value="auto"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemContainerStyle>
+                <Style TargetType="ContentPresenter">
+                    <Setter Property="Grid.Row" Value="{Binding ViewX}" />
+                    <Setter Property="Grid.Column" Value="{Binding ViewY}" />
+                </Style>    
+            </ItemsControl.ItemContainerStyle>
+        </ItemsControl>
+        <StatusBar Grid.Row="2">
+            <StatusBarItem>
+                <TextBlock Text="Lépésszám: "/>
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="{Binding GameStepCount}"/>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <TextBlock Text="Következő táblaméret: "/>
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="{Binding TableSize}"/>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <TextBlock Text="Soron levő játékos: "/>
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="{Binding CurrentPlayer}"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>
